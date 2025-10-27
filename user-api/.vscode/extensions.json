@@ -1,9 +1,0 @@
-{
-    "recommendations": [
-        "ms-vscode.atom-keybindings",
-        "vscjava.vscode-java-pack",
-        "vmware.vscode-boot-dev-pack",
-        "humao.rest-client",
-        "ms-vscode-remote.remote-containers"
-    ]
-}
