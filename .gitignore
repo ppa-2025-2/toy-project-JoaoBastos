@@ -1,3 +1,6 @@
+# Java.gitignore
+.idea/
+
 # Compiled class file
 *.class
 
