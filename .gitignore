@@ -1,3 +1,9 @@
+# Java related ignores
+.idea/
+
+# build output
+/build/
+
 # Compiled class file
 *.class
 
