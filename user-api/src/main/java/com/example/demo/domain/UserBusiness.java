@@ -19,10 +19,7 @@ import com.example.demo.repository.entity.User;
 
 import jakarta.validation.Valid;
 
-// Spring -> possui um container de Injeção de Dependências
-
-// estereótipo
-@Business // Domain, DomainService, Service, UseCase
+@Business
 @Validated
 public class UserBusiness {
 
@@ -46,19 +43,7 @@ public class UserBusiness {
         this.typeRepository = typeRepository;
     }
     
-    // cadastrar usuário é um use case (é uma feature)
     public void cadastrarUsuario(@Valid NewUserDTO newUser) {
-        // if (newUser.email() == null || newUser.password() == null) {
-        //     throw new IllegalArgumentException("Email e senha são obrigatórios");
-        // }
-
-        // if (newUser.email().isEmpty() || newUser.password().isEmpty()) {
-        //     throw new IllegalArgumentException("Email e senha não podem estar vazios");
-        // }
-
-        // if (!newUser.email().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-        //     throw new IllegalArgumentException("Email não é válido");
-        // }
 
         if (!newUser.password().matches("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$")) {
             throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres e conter pelo menos uma letra e um número");

@@ -1,5 +1,4 @@
 
-
 ### Get all users
 
 GET /api/v1/users HTTP/1.1

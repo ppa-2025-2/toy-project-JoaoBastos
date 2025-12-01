@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.controller.dto.OnboardingTicketRequest;
 import com.example.demo.controller.dto.TicketCreateDTO;
 import com.example.demo.controller.dto.TicketUpdateDTO;
 import com.example.demo.controller.dto.UserIdDTO;
@@ -7,6 +8,8 @@ import com.example.demo.domain.Ticket;
 import com.example.demo.domain.enums.TicketStatus;
 import com.example.demo.mapper.TicketMapper;
 import com.example.demo.repository.TicketRepository;
+import com.example.demo.repository.entity.Profile;
+import com.example.demo.repository.entity.User;
 import com.example.demo.service.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,24 @@ public class TicketController {
         this.service = ticketService;
         this.mapper = mapper;
         this.repository = repository;
+    }
+
+    @PostMapping("/onBoarding")
+    public ResponseEntity<Ticket> onBoarding(@RequestBody OnboardingTicketRequest request) {
+        User user = new User();
+        user.setId(request.getUserId());
+        user.setEmail(request.getEmail());
+
+        if (request.getName() != null) {
+            Profile profile = new Profile();
+            profile.setName(request.getName());
+            user.setProfile(profile);
+        }
+
+        user.setHandle(request.getHandle());
+
+        var response = service.createUserOnboardingTickets(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/create")

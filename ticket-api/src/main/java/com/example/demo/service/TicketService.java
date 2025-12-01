@@ -5,8 +5,12 @@ import com.example.demo.domain.Ticket;
 import com.example.demo.domain.enums.TicketStatus;
 import com.example.demo.repository.TicketRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.entity.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -16,13 +20,42 @@ public class TicketService {
 
     public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
-        this.userRepository =  userRepository;
+        this.userRepository = userRepository;
     }
 
     public Ticket create(Ticket ticket) {
         ticket.setStatus(TicketStatus.PENDENTE);
 
         return ticketRepository.save(ticket);
+    }
+
+    @Transactional
+    public Ticket createUserOnboardingTickets(User newUser) {
+
+        User creatorReference = new User();
+        creatorReference.setId(newUser.getId());
+
+        Ticket onboardingTicket = new Ticket();
+        onboardingTicket.setObject("Onboarding do Usuário");
+        onboardingTicket.setAction("Realizar Processo de Onboarding");
+
+        String userName = newUser.getProfile() != null && newUser.getProfile().getName() != null
+                ? newUser.getProfile().getName()
+                : newUser.getHandle();
+
+        onboardingTicket.setDetails(String.format(
+                "Realizar onboarding completo para o usuário %s (%s).",
+                userName,
+                newUser.getEmail()
+        ));
+        onboardingTicket.setLocal("RH");
+        onboardingTicket.setStatus(TicketStatus.PENDENTE);
+        onboardingTicket.setCreator(creatorReference);
+        onboardingTicket.setAssignee(null);
+        onboardingTicket.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        onboardingTicket.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+        return ticketRepository.save(onboardingTicket);
     }
 
     public Ticket technicalAssignService(Long ticket_id, Integer user) {
@@ -33,7 +66,6 @@ public class TicketService {
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado com id: " + user));
 
         System.out.println("TIPO DO USUARIO " + technicalUser.getTypes());
-
 
 
         if (technicalUser.isNotTecnico()) {

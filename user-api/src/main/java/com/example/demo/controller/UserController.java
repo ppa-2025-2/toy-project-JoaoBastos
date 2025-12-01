@@ -1,8 +1,8 @@
-
 package com.example.demo.controller;
 
 import java.util.List;
 
+import com.example.demo.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.controller.dto.NewUserDTO;
-import com.example.demo.domain.UserBusiness;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.entity.User;
 
@@ -23,24 +22,19 @@ import com.example.demo.repository.entity.User;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private UserBusiness userBusiness;
     private UserRepository userRepository;
+    private UserService userService;
 
-    public UserController(
-            UserBusiness userBusiness,
-            UserRepository userRepository
-        ) {
-        this.userBusiness = userBusiness;
+    public UserController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
-    
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public void newUser(@RequestBody NewUserDTO newUser) {
-        // O Controller pode ter lógica?
-        // Pode, lógica de controle (roteamento).
-        // O Controller delega para o Domain Business
-        userBusiness.cadastrarUsuario(newUser);
+
+        userService.cadastrarUsuario(newUser);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
